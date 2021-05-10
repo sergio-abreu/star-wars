@@ -1,0 +1,18 @@
+version: "2.4"
+services:
+  postgres:
+    image: postgres:13
+    ports:
+      - "15432:5432"
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U discount" ]
+      interval: 5s
+      timeout: 10s
+      retries: 15
+    environment:
+      POSTGRES_DB: starwars
+      POSTGRES_USER: starwars
+      POSTGRES_PASSWORD: P@ssword
+    volumes:
+      - ./.docker/postgres/data:/var/lib/postgresql/data
