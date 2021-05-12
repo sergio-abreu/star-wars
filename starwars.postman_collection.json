@@ -1,0 +1,251 @@
+{
+	"info": {
+		"_postman_id": "3f12e089-1230-40c6-90f1-c033bc20f01f",
+		"name": "StarWars",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "World",
+			"item": [
+				{
+					"name": "Planets",
+					"item": [
+						{
+							"name": "Create planet from http://swapi.dev",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"let id = pm.globals.get(\"id\");",
+											"if (id == undefined) {",
+											"    id = 1;",
+											"}",
+											"pm.sendRequest(\"https://swapi.dev/api/planets/\" + id, function (err, response) {",
+											"    if (err != undefined) {",
+											"        console.error(err);",
+											"        throw new Error(\"something went wrong\");",
+											"    }",
+											"    if (response.code != 200) {",
+											"        throw new Error(response.code + \" - \" + response.text());",
+											"    }",
+											"    let planet = response.json();",
+											"    pm.environment.set(\"name\", planet.name);",
+											"    pm.environment.set(\"climates\", planet.climate);",
+											"    pm.environment.set(\"terrains\", planet.terrain);",
+											"    pm.globals.set(\"id\", parseInt(id)+1);",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"name\": \"{{name}}\",\n    \"climates\": \"{{climates}}\",\n    \"terrains\": \"{{terrains}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:50090/api/v1/world/planets",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "50090",
+									"path": [
+										"api",
+										"v1",
+										"world",
+										"planets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create planet",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{$guid}}\",\n    \"name\": \"\",\n    \"climates\": \"\",\n    \"terrains\": \"\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:50090/api/v1/world/planets",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "50090",
+									"path": [
+										"api",
+										"v1",
+										"world",
+										"planets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get planet",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:50090/api/v1/world/planets/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "50090",
+									"path": [
+										"api",
+										"v1",
+										"world",
+										"planets",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "Tatooine"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all planets",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:50090/api/v1/world/planets",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "50090",
+									"path": [
+										"api",
+										"v1",
+										"world",
+										"planets"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete planet",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:50090/api/v1/world/planets/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "50090",
+									"path": [
+										"api",
+										"v1",
+										"world",
+										"planets",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "385cc221-bf97-4617-85ae-8d3266f47b3a"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Fandom",
+			"item": [
+				{
+					"name": "Planets",
+					"item": [
+						{
+							"name": "Get planet",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:50090/api/v1/fandom/planets/:id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "50090",
+									"path": [
+										"api",
+										"v1",
+										"fandom",
+										"planets",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "Tatooine"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
