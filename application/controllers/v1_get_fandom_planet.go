@@ -10,7 +10,6 @@ import (
 
 func V1GetFandomPlanet(ctrl *get_planet_with_apparitions.GetPlanetsController) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		logrus.WithField("header", ctx.Request.Header).Info("headers")
 		var query get_planet.GetPlanetQuery
 		err := ctx.ShouldBindUri(&query)
 		if err != nil {
