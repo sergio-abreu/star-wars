@@ -10,7 +10,7 @@ import (
 func V1CreatePlanet(ctrl *create_planet.CreatePlanetController) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var command create_planet.CreatePlanetCommand
-		err := ctx.BindJSON(&command)
+		err := ctx.ShouldBindJSON(&command)
 		if err != nil {
 			abortWithMessage(ctx, http.StatusBadRequest, "invalid input")
 			return

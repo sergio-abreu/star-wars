@@ -57,11 +57,9 @@ type swapiMovie struct {
 }
 
 func (r *WebRepository) getPlanetByName(name string, allPlanetsUrls ...string) (swapiPlanet, error) {
-	aPlanetCh := make(chan swapiPlanet, len(allPlanetsUrls)*60)
-	defer close(aPlanetCh)
+	aPlanetCh := make(chan swapiPlanet, len(allPlanetsUrls)*10)
 	done := make(chan struct{}, 1)
 	errCh := make(chan error, len(allPlanetsUrls))
-	defer close(errCh)
 	var wg sync.WaitGroup
 	for _, allPlanetsUrl := range allPlanetsUrls {
 		wg.Add(1)
@@ -86,6 +84,8 @@ func (r *WebRepository) getPlanetByName(name string, allPlanetsUrls ...string) (
 		wg.Wait()
 		done <- struct{}{}
 		close(done)
+		close(errCh)
+		close(aPlanetCh)
 	}()
 	select {
 	case aPlanet := <-aPlanetCh:
@@ -117,7 +117,7 @@ func (r *WebRepository) getMoviesBySwapiPlanet(aPlanet swapiPlanet) ([]apparitio
 	close(movieCh)
 	movies := make([]apparitions.Movie, 0)
 	for movie := range movieCh {
-		movies = append(movies, apparitions.NewMovie(movie.Title))
+		movies = append(movies, apparitions.Movie(movie.Title))
 	}
 	return movies, nil
 }

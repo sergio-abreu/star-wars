@@ -1,4 +1,4 @@
-package get_planets
+package get_planet_with_apparitions
 
 import (
 	"github.com/pkg/errors"
@@ -15,7 +15,7 @@ type GetPlanetsController struct {
 	getPlanetCtrl   *get_planet.GetPlanetController
 }
 
-func (c *GetPlanetsController) GetPlanet(query get_planet.GetPlanetQuery) (aPlanet GetPlanetsResponse, err error) {
+func (c *GetPlanetsController) GetPlanetWithApparitions(query get_planet.GetPlanetQuery) (aPlanet GetPlanetsResponse, err error) {
 	aPlanet.Planet, err = c.getPlanetCtrl.GetPlanet(query)
 	if err != nil {
 		return aPlanet, errors.Wrap(err, "failed to get planet")

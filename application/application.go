@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sergio-vaz-abreu/star-wars/application/controllers"
 	"github.com/sergio-vaz-abreu/star-wars/infrastructure/postgres"
+	"github.com/sergio-vaz-abreu/star-wars/modules/fandom/application/get_planet_with_apparitions"
 	"github.com/sergio-vaz-abreu/star-wars/modules/movies/application/apparitions/get_movies_apparitions"
 	"github.com/sergio-vaz-abreu/star-wars/modules/movies/infrastructure/apparitions"
 	"github.com/sergio-vaz-abreu/star-wars/modules/world/application/planets/create_planet"
@@ -29,13 +30,14 @@ func Load(config Config) (*Application, error) {
 	}
 	planetRepository := planets.NewSqlRepository(db)
 	getMoviesApparitionsCtrl := get_movies_apparitions.NewGetMoviesApparitionsController(apparitionRepository)
-	_ = getMoviesApparitionsCtrl
+	getPlanetCtrl := get_planet.NewGetPlanetController(planetRepository)
 	engine := gin.Default()
 	api := engine.Group("/api/v1")
-	api.POST("/planets", controllers.V1CreatePlanet(create_planet.NewCreatePlanetController(planetRepository)))
-	api.GET("/planets/:id", controllers.V1GetPlanet(get_planet.NewGetPlanetController(planetRepository)))
-	api.GET("/planets", controllers.V1GetPlanets(get_planets.NewGetPlanetsController(planetRepository)))
-	api.DELETE("/planets/:id", controllers.V1DeletePlanets(delete_planet.NewDeletePlanetController(planetRepository)))
+	api.POST("/world/planets", controllers.V1CreatePlanet(create_planet.NewCreatePlanetController(planetRepository)))
+	api.GET("/world/planets/:id", controllers.V1GetPlanet(getPlanetCtrl))
+	api.GET("/world/planets", controllers.V1GetPlanets(get_planets.NewGetPlanetsController(planetRepository)))
+	api.DELETE("/world/planets/:id", controllers.V1DeletePlanets(delete_planet.NewDeletePlanetController(planetRepository)))
+	api.GET("/fandom/planets/:id", controllers.V1GetFandomPlanet(get_planet_with_apparitions.NewGetPlanetsController(getMoviesApparitionsCtrl, getPlanetCtrl)))
 	return &Application{&http.Server{Handler: engine, Addr: config.WebServerAddr}}, nil
 }
 

@@ -10,7 +10,7 @@ import (
 func V1DeletePlanets(ctrl *get_planet.DeletePlanetController) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var command get_planet.DeletePlanetCommand
-		err := ctx.BindJSON(&command)
+		err := ctx.ShouldBindUri(&command)
 		if err != nil {
 			abortWithMessage(ctx, http.StatusBadRequest, "invalid input")
 			return
