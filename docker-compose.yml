@@ -16,3 +16,13 @@ services:
       POSTGRES_PASSWORD: P@ssword
     volumes:
       - ./.docker/postgres/data:/var/lib/postgresql/data
+
+  migration:
+    image: migrate/migrate:v4.14.1
+    command: ["-path=/migrations", "-database=postgres://starwars:P@ssword@postgres:5432/starwars?sslmode=disable", "up"]
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./infrastructure/migrations:/migrations
