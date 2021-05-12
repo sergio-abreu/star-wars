@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/Netflix/go-env"
 	"github.com/pkg/errors"
+	"github.com/sergio-vaz-abreu/star-wars/infrastructure/postgres"
 )
 
 func LoadConfigFromEnv() (Config, error) {
@@ -12,4 +13,7 @@ func LoadConfigFromEnv() (Config, error) {
 }
 
 type Config struct {
+	WebServerAddr string `env:"WEB_SERVER_ADDR"`
+	SWApiBaseUrl  string `env:"SW_API_BASE_URL"`
+	Postgres      postgres.Config
 }
