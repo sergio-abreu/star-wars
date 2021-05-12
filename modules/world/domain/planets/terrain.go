@@ -6,6 +6,20 @@ import (
 
 type Terrain string
 
+func (t Terrain) ToString() string {
+	return string(t)
+}
+
+type Terrains []Terrain
+
+func (t Terrains) ToStringSlice() []string {
+	var stringSlice []string
+	for _, terrain := range t {
+		stringSlice = append(stringSlice, terrain.ToString())
+	}
+	return stringSlice
+}
+
 func createTerrains(rawTerrains string) ([]Terrain, error) {
 	var terrains []Terrain
 	for _, rawTerrain := range strings.Split(rawTerrains, ",") {

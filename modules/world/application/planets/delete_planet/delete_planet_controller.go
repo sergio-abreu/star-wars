@@ -14,6 +14,10 @@ type DeletePlanetController struct {
 }
 
 func (a *DeletePlanetController) DeletePlanet(query DeletePlanetCommand) error {
-	err := a.planetsRepository.Delete(query.ID)
+	planetId, err := planets.CreatePlanetID(query.ID)
+	if err != nil {
+		return errors.Wrap(err, "failed to create planet id")
+	}
+	err = a.planetsRepository.Delete(planetId)
 	return errors.Wrap(err, "failed to delete planet")
 }

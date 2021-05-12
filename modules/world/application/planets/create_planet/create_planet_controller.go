@@ -14,11 +14,15 @@ type CreatePlanetController struct {
 }
 
 func (a *CreatePlanetController) CreatePlanet(command CreatePlanetCommand) (planets.Planet, error) {
-	aPlanet, err := a.planetsRepository.GetById(command.ID)
+	planetId, err := planets.CreatePlanetID(command.ID)
+	if err != nil {
+		return planets.Planet{}, errors.Wrap(err, "failed to create planet id")
+	}
+	aPlanet, err := a.planetsRepository.GetById(planetId)
 	if err == nil {
 		return aPlanet, nil
 	}
-	if err == planets.ErrPlanetNotFound {
+	if err != planets.ErrPlanetNotFound {
 		return planets.Planet{}, errors.Wrap(err, "failed to check if planet already exists")
 	}
 	aPlanet, err = planets.CreatePlanet(command.ID, command.Name, command.Climates, command.Terrains)

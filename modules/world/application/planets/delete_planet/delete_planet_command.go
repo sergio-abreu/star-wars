@@ -1,5 +1,5 @@
 package delete_planet
 
 type DeletePlanetCommand struct {
-	ID string `json:"id"`
+	ID string `json:"id" uri:"id"`
 }

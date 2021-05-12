@@ -5,11 +5,21 @@ import (
 	"testing"
 )
 
+const guid = "10d8ded7-21dc-4b8a-949f-762bfcd7fd69"
+
 func TestPlanet(t *testing.T) {
+	t.Run("Do not create planet when id is empty", func(t *testing.T) {
+		g := NewGomegaWithT(t)
+
+		_, err := CreatePlanet("", "", "", "")
+
+		g.Expect(err).Should(
+			MatchError(ErrInvalidPlanetID))
+	})
 	t.Run("Do not create planet when name is empty", func(t *testing.T) {
 		g := NewGomegaWithT(t)
 
-		_, err := CreatePlanet("1", "", "", "")
+		_, err := CreatePlanet(guid, "", "", "")
 
 		g.Expect(err).Should(
 			MatchError(ErrEmptyPlanetName))
@@ -17,7 +27,7 @@ func TestPlanet(t *testing.T) {
 	t.Run("Create planet with unknown climate and terrain when climate and terrain are empty", func(t *testing.T) {
 		g := NewGomegaWithT(t)
 
-		sut, err := CreatePlanet("1", "earth", "", "")
+		sut, err := CreatePlanet(guid, "earth", "", "")
 
 		g.Expect(err).Should(
 			Not(HaveOccurred()))
@@ -31,7 +41,7 @@ func TestPlanet(t *testing.T) {
 	t.Run("Do not create planet when climate is not mapped", func(t *testing.T) {
 		g := NewGomegaWithT(t)
 
-		_, err := CreatePlanet("1", "earth", "no climate", "")
+		_, err := CreatePlanet(guid, "earth", "no climate", "")
 
 		g.Expect(err).Should(
 			MatchError(`climate "no climate" not found`))
@@ -39,7 +49,7 @@ func TestPlanet(t *testing.T) {
 	t.Run("Do not create planet when terrain is not mapped", func(t *testing.T) {
 		g := NewGomegaWithT(t)
 
-		_, err := CreatePlanet("1", "earth", "", "no terrain")
+		_, err := CreatePlanet(guid, "earth", "", "no terrain")
 
 		g.Expect(err).Should(
 			MatchError(`terrain "no terrain" not found`))
@@ -47,7 +57,7 @@ func TestPlanet(t *testing.T) {
 	t.Run("Create planet when there are more than 1 climate and terrain", func(t *testing.T) {
 		g := NewGomegaWithT(t)
 
-		sut, err := CreatePlanet("1", "earth", "arid, rocky", "barren, ash")
+		sut, err := CreatePlanet(guid, "earth", "arid, rocky", "barren, ash")
 
 		g.Expect(err).Should(
 			Not(HaveOccurred()))

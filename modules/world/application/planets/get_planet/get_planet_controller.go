@@ -14,14 +14,15 @@ type GetPlanetController struct {
 }
 
 func (a *GetPlanetController) GetPlanet(query GetPlanetQuery) (planets.Planet, error) {
-	aPlanet, err := a.planetsRepository.GetById(query.ID)
+	planetId, err := planets.CreatePlanetID(query.ID)
 	if err == nil {
+		aPlanet, err := a.planetsRepository.GetById(planetId)
+		if err != nil {
+			return planets.Planet{}, errors.Wrap(err, "failed to get planet by id")
+		}
 		return aPlanet, nil
 	}
-	if err != planets.ErrPlanetNotFound {
-		return planets.Planet{}, errors.Wrap(err, "failed to get planet by id")
-	}
-	aPlanet, err = a.planetsRepository.GetByName(query.Name)
+	aPlanet, err := a.planetsRepository.GetByName(query.Name)
 	if err != nil {
 		return planets.Planet{}, errors.Wrap(err, "failed to get planet by name")
 	}

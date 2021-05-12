@@ -6,6 +6,20 @@ import (
 
 type Climate string
 
+func (c Climate) ToString() string {
+	return string(c)
+}
+
+type Climates []Climate
+
+func (c Climates) ToStringSlice() []string {
+	var stringSlice []string
+	for _, climate := range c {
+		stringSlice = append(stringSlice, climate.ToString())
+	}
+	return stringSlice
+}
+
 func createClimates(rawClimates string) ([]Climate, error) {
 	var climates []Climate
 	for _, rawClimate := range strings.Split(rawClimates, ",") {

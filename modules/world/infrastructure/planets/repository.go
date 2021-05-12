@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/pkg/errors"
 	"github.com/sergio-vaz-abreu/star-wars/modules/world/domain/planets"
+	"strings"
 )
 
 func NewSqlRepository(db *sql.DB) *SqlRepository {
@@ -14,9 +15,9 @@ type SqlRepository struct {
 	db *sql.DB
 }
 
-func (r *SqlRepository) GetById(id string) (planets.Planet, error) {
+func (r *SqlRepository) GetById(id planets.PlanetID) (planets.Planet, error) {
 	query := "SELECT id, name, climates, terrains FROM planets where id = $1;"
-	row := r.db.QueryRow(query, id)
+	row := r.db.QueryRow(query, id.String())
 	return r.scanPlanet(row)
 }
 
@@ -48,15 +49,15 @@ func (r *SqlRepository) GetAll() ([]planets.Planet, error) {
 	return allPlanets, nil
 }
 
-func (r *SqlRepository) Delete(id string) error {
+func (r *SqlRepository) Delete(id planets.PlanetID) error {
 	query := "DELETE FROM planets WHERE id = $1;"
-	_, err := r.db.Exec(query, id)
+	_, err := r.db.Exec(query, id.String())
 	return errors.Wrap(err, "failed to delete planet from database")
 }
 
 func (r *SqlRepository) Save(aPlanet planets.Planet) error {
-	query := "INSERT INTO planets (id, name, climates, terrains) VALUES ();"
-	result, err := r.db.Exec(query, aPlanet.ID, aPlanet.Name, aPlanet.Climates, aPlanet.Terrains)
+	query := "INSERT INTO planets (id, name, climates, terrains) VALUES ($1, $2, $3, $4);"
+	result, err := r.db.Exec(query, aPlanet.ID.String(), aPlanet.Name, strings.Join(aPlanet.Climates.ToStringSlice(), ", "), strings.Join(aPlanet.Terrains.ToStringSlice(), ", "))
 	if err != nil {
 		return errors.Wrap(err, "failed to create planet into database")
 	}
@@ -69,7 +70,7 @@ func (r *SqlRepository) Save(aPlanet planets.Planet) error {
 func (r *SqlRepository) scanPlanet(row *sql.Row) (planets.Planet, error) {
 	var planetID, planetName, planetClimates, planetTerrains string
 	err := row.Scan(&planetID, &planetName, &planetClimates, &planetTerrains)
-	if err != sql.ErrNoRows {
+	if err == sql.ErrNoRows {
 		return planets.Planet{}, planets.ErrPlanetNotFound
 	}
 	if err != nil {

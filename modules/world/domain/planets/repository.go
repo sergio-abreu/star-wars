@@ -3,10 +3,10 @@ package planets
 import "github.com/pkg/errors"
 
 type Repository interface {
-	GetById(id string) (Planet, error)
+	GetById(id PlanetID) (Planet, error)
 	GetByName(name string) (Planet, error)
 	GetAll() ([]Planet, error)
-	Delete(id string) error
+	Delete(id PlanetID) error
 	Save(aPlanet Planet) error
 }
 
