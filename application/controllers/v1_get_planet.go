@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"github.com/sergio-vaz-abreu/star-wars/modules/world/application/planets/get_planet"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -17,7 +18,7 @@ func V1GetPlanet(ctrl *get_planet.GetPlanetController) gin.HandlerFunc {
 		}
 		aPlanet, err := ctrl.GetPlanet(query)
 		if get_planet.ErrNotFound(err) {
-			abortWithMessage(ctx, http.StatusNotFound, err.Error())
+			abortWithMessage(ctx, http.StatusNotFound, errors.Wrap(err, "failed to get planet").Error())
 			return
 		}
 		if err != nil {

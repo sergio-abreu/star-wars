@@ -41,5 +41,6 @@ func ErrInvalidInput(err error) bool {
 	isEmptyPlanetName := cause == planets.ErrEmptyPlanetName
 	_, isClimateNotFound := cause.(planets.ErrClimateNotFound)
 	_, isTerrainNotFound := cause.(planets.ErrTerrainNotFound)
-	return isEmptyPlanetName || isClimateNotFound || isTerrainNotFound
+	isInvalidPlanetID := cause == planets.ErrInvalidPlanetID
+	return isEmptyPlanetName || isClimateNotFound || isTerrainNotFound || isInvalidPlanetID
 }

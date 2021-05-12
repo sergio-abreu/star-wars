@@ -45,6 +45,7 @@ var allTerrains = map[string]Terrain{
 	"caves":            "caves",
 	"savannahs":        "savannahs",
 	"savannas":         "savannas",
+	"savanna":          "savanna",
 	"seas":             "seas",
 	"cities":           "cities",
 	"cityscape":        "cityscape",

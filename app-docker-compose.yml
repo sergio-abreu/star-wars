@@ -1,0 +1,41 @@
+version: "2.4"
+services:
+  postgres:
+    image: postgres:13
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U discount" ]
+      interval: 5s
+      timeout: 10s
+      retries: 15
+    environment:
+      POSTGRES_DB: starwars
+      POSTGRES_USER: starwars
+      POSTGRES_PASSWORD: P@ssword
+
+  migration:
+    image: migrate/migrate:v4.14.1
+    command: [ "-path=/migrations", "-database=postgres://starwars:P@ssword@postgres:5432/starwars?sslmode=disable", "up" ]
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./infrastructure/migrations:/migrations
+
+  starwars:
+    image: star-wars:1.0.0
+    restart: on-failure
+    ports:
+      - "50090:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      WEB_SERVER_ADDR: :80
+      SW_API_BASE_URL: https://swapi.dev
+      DB_USER: starwars
+      DB_PASSWORD: P@ssword
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: starwars

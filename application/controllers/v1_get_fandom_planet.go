@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"github.com/sergio-vaz-abreu/star-wars/modules/fandom/application/get_planet_with_apparitions"
 	"github.com/sergio-vaz-abreu/star-wars/modules/world/application/planets/get_planet"
 	"github.com/sirupsen/logrus"
@@ -18,7 +19,7 @@ func V1GetFandomPlanet(ctrl *get_planet_with_apparitions.GetPlanetsController) g
 		}
 		aPlanet, err := ctrl.GetPlanetWithApparitions(query)
 		if get_planet.ErrNotFound(err) {
-			abortWithMessage(ctx, http.StatusNotFound, err.Error())
+			abortWithMessage(ctx, http.StatusNotFound, errors.Wrap(err, "failed to get planet").Error())
 			return
 		}
 		if err != nil {

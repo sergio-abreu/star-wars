@@ -21,3 +21,8 @@ func (a *DeletePlanetController) DeletePlanet(query DeletePlanetCommand) error {
 	err = a.planetsRepository.Delete(planetId)
 	return errors.Wrap(err, "failed to delete planet")
 }
+
+func ErrInvalidInput(err error) bool {
+	cause := errors.Cause(err)
+	return cause == planets.ErrInvalidPlanetID
+}

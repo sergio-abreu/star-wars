@@ -37,3 +37,10 @@ test: get-deps ## Run project tests
 	docker-compose up -d --quiet-pull
 	mkdir -p ./.test/cover
 	go test -race -coverpkg= ./... -coverprofile=./.test/cover/cover.out -v
+
+run: docker-build ## Run application
+	docker-compose -f ./app-docker-compose.yml up -d --quiet-pull
+
+clean: ## Run application
+	docker-compose -f ./app-docker-compose.yml down
+	docker-compose down
